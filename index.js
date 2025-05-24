@@ -2,6 +2,9 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const router = require('./routes')();
+
+const db = require('./config/db');
+db.sync().then(() => console.log('DB conectada')).catch((error) => console.log(error));
 require('dotenv').config({ path: 'variables.env' });
 
 const app = express();
@@ -16,9 +19,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //middleware (usuario logueado, flash messages, fecha actual)
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
     const fecha = new Date();
-    res.locals.year=fecha.getFullYear();
+    res.locals.year = fecha.getFullYear();
     next();
 });
 //routing
