@@ -1,14 +1,25 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const bodyParser= require('body-parser');
 const path = require('path');
+const flash = require('connect-flash');
+const session= require('express-session');
+const cookieParser = require('cookie-parser');
 const router = require('./routes')();
 
+//configuracion y modelos db
 const db = require('./config/db');
-require('./models/Usuarios');
-db.sync().then(() => console.log('DB conectada')).catch((error) => console.log(error));
+    require('./models/Usuarios');
+    db.sync().then(() => console.log('DB conectada')).catch((error) => console.log(error));
+//variables de desarrollo
 require('dotenv').config({ path: 'variables.env' });
 
+//app principal
 const app = express();
+
+//body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 //habilitar ejs
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
@@ -19,6 +30,15 @@ app.set('views', path.join(__dirname, 'views'));
 //archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
 
+//habilitar cookie parser
+app.use(cookieParser());
+app.use(session({
+    secret:process.env.SECRETO,
+    key:process.env.KEY,
+    resave: false,
+    saveUninitialized: false
+
+}))
 //middleware (usuario logueado, flash messages, fecha actual)
 app.use((req, res, next) => {
     const fecha = new Date();
