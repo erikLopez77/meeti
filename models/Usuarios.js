@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require('../config/db');
 const bcrypt = require('bcrypt-nodejs');
-const { Hooks } = require('sequelize/lib/hooks');
 
 const Usuarios = db.define('usuarios', {
     id: {
@@ -19,7 +18,8 @@ const Usuarios = db.define('usuarios', {
         unique: {
             args: true,
             msg: 'Usuario ya registrado'
-        }, password: {
+        }
+    }, password: {
             type: Sequelize.STRING(60),
             allowNull: false,
             validate: {
@@ -28,12 +28,12 @@ const Usuarios = db.define('usuarios', {
                 }
             }
         }, activo: {
-            type: Sequelize.INTEGER(1),
+            type: Sequelize.INTEGER,
             defaultValue: 0
         },
         tokenPassword: Sequelize.STRING,
-        expiraTokem: Sequelize.DATE
-    }
+        expiraToken: Sequelize.DATE
+
 }, {
     hooks: {
         beforeCreate(usuario) {
@@ -43,7 +43,7 @@ const Usuarios = db.define('usuarios', {
 });
 
 //metodo para comparar los password
-Usuarios.prototype.validarPasswordl = function (password) {
+Usuarios.prototype.validarPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 }
 module.exports = Usuarios;
