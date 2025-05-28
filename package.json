@@ -21,6 +21,7 @@
     "express": "^5.1.0",
     "express-ejs-layouts": "^2.5.1",
     "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
     "pg": "^8.16.0",
     "sequelize": "^6.37.7"
   }

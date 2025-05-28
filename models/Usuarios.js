@@ -12,13 +12,13 @@ const Usuarios = db.define('usuarios', {
     email: {
         type: Sequelize.STRING(30),
         allowNull: false,
+        unique: {
+            args: true,
+            msg: 'El correo ya ha fue registrado'
+        },
         validate: {
             isEmail: { msg: 'Agrega un correo válido' }
         },
-        unique: {
-            args: true,
-            msg: 'Usuario ya registrado'
-        }
     }, password: {
             type: Sequelize.STRING(60),
             allowNull: false,

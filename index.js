@@ -20,6 +20,7 @@ const app = express();
 //body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
 //habilitar ejs
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
@@ -38,9 +39,12 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 
-}))
+}));
+
+app.use(flash());
 //middleware (usuario logueado, flash messages, fecha actual)
 app.use((req, res, next) => {
+    res.locals.mensajes=req.flash();
     const fecha = new Date();
     res.locals.year = fecha.getFullYear();
     next();
