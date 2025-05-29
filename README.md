@@ -1,1 +1,5 @@
 # meeti
+//file .env
+PORT=5000
+SECRETO=palabrasecreta
+KEY=supersecreta
