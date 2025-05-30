@@ -32,7 +32,7 @@ exports.crearNuevaCuenta = async (req,res)=>{
        // extraer el message de los errores
        console.log(error);
         let listaErrores = [];
-        const erroresSequelize= error.errors.map(err=>err.message);
+        const erroresSequelize= error.errors ? error.errors.map(err=>err.message): [];
         //extraer msg de los errores
         const errExp=erroresExpress.errors.map(err=>err.msg);
         //unir errores
@@ -40,7 +40,10 @@ exports.crearNuevaCuenta = async (req,res)=>{
         if (error.name === 'SequelizeUniqueConstraintError') {
             listaErrores.push('El correo electrónico ya está registrado');
         }
-        req.flash('error',listaErrores);
+
+        if(listaErrores.length>0){
+            req.flash('error',listaErrores);
+        }
         res.redirect('/crear-cuenta');
     }
 }
