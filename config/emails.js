@@ -1,6 +1,6 @@
-module.exports={
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
-    user: "b32567e6099ef6",
-    pass: "****b7e8"
+module.exports = {
+    host: 'smtp.ethereal.email',
+    port: 587,
+    user: 'donald11@ethereal.email',
+    pass: 'GZf93VVSFHQtNaumfJ'
 }
