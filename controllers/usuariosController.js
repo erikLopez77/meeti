@@ -48,7 +48,7 @@ exports.crearNuevaCuenta = async (req, res) => {
     }
 }
 //confirma la suscripcion del usuario
-exports.confirmarcuenta = async (req, res, next) => {
+exports.confirmarCuenta = async (req, res, next) => {
     //verificar que existe el usuario
     const usuario = await Usuarios.findOne({ where: { email: req.params.correo } });
 
