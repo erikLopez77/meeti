@@ -10,9 +10,9 @@ const router = require('./routes')();
 
 //configuracion y modelos db
 const db = require('./config/db');
-const { pass } = require('./config/emails');
 require('./models/Usuarios');
-require('./models/Categoria')
+require('./models/Categoria');
+//require('./models/Grupos');
 db.sync().then(() => console.log('DB conectada')).catch((error) => console.log(error));
 //variables de desarrollo
 require('dotenv').config({ path: 'variables.env' });
