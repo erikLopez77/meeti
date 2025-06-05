@@ -5,6 +5,32 @@
             <label>Nombre</label>
             <input type="text" name="nombre" placeholder="Nombre grupo">
         </div>
-
+        <div class="campo descripcion">
+            <label>Descripción</label>
+            <div class="contenido editor">
+                <input type="hidden" id="x" name="descripcion">
+                <trix-editor input="x"></trix-editor>
+            </div>
+        </div>
+        <div class="campo">
+            <label>Categoria</label>
+            <select name="categoria">
+                <option value="" selected disabled>-- Elige una categoria --</option>
+                <% categorias.forEach(categoria => { %>
+                    <option value="<%= categoria.id %>"><%= categoria.nombre %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="campo">
+            <label>Imagen</label>
+            <input type="file" name="imagen">
+        </div>
+        <div class="campo">
+            <label>Sitio web</label>
+            <input type="url" name="url" placeholder="Sitio web">
+        </div>
+        <div class="campo enviar">
+            <input type="submit" value="Crear grupo" class="btn btn-rosa">
+        </div>
     </form>
 </main>

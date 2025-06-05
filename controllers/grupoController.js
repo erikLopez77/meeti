@@ -1,5 +1,9 @@
-exports.formNuevoGrupo = (req,res) =>{
+const Categorias = require('../models/Categoria');
+
+exports.formNuevoGrupo = async (req,res) =>{
+    const categorias = await Categorias.findAll();
     res.render('nuevo-grupo',{
-        nombrePagina:'Crea un nuevo grupo'
+        nombrePagina:'Crea un nuevo grupo',
+        categorias
     })
 }
