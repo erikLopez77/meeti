@@ -12,7 +12,7 @@ const router = require('./routes')();
 const db = require('./config/db');
 require('./models/Usuarios');
 require('./models/Categoria');
-//require('./models/Grupos');
+require('./models/Grupos');
 db.sync().then(() => console.log('DB conectada')).catch((error) => console.log(error));
 //variables de desarrollo
 require('dotenv').config({ path: 'variables.env' });
