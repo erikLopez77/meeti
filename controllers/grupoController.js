@@ -98,3 +98,23 @@ exports.formEditarGrupo = async (req, res) => {
         categorias
     });
 }
+exports.editarGrupo = async (req, res, next) => {
+    const grupo = await Grupos.findOne({ where: { id: req.params.grupoId, usuarioId: req.user.id } });
+    // si no existe el grupo
+    if (!grupo) {
+        req.flash('error', 'Operación no válida');
+        res.redirect('/administracion');
+        return next();
+    }
+
+    const { nombre, descripcion, categoriaId, url } = req.body;
+
+    grupo.nombre = nombre;
+    grupo.descripcion = descripcion;
+    grupo.categoriaId = categoriaId;
+    grupo.url = url;
+
+    await grupo.save();
+    req.flash('exito', 'Cambios almacenados correctamente');
+    res.redirect('/administracion');
+}
