@@ -3,6 +3,7 @@ const Grupos = require('../models/Grupos');
 const { check } = require('express-validator');
 const multer = require('multer');//p subir imagenes
 const shortid = require('shortid');//para id
+const he = require('he');
 
 const configuracionMulter = {
     limits: { fileSize: 100000 },
@@ -37,7 +38,7 @@ exports.subirImagen = (req, res, next) => {
             } else if (error.hasOwnProperty('message')) {
                 req.flash('error', error.message);
             }
-            res.redirect('back');
+            res.redirect('/administracion');
             return;
             //TODO: Manejar errores
         } else {
@@ -75,4 +76,25 @@ exports.crearGrupo = async (req, res) => {
         req.flash('error', erroresSequelize);
         res.redirect('/nuevo-grupo');
     }
+}
+exports.formEditarGrupo = async (req, res) => {
+    const consultas = [];
+    consultas.push(Grupos.findByPk(req.params.grupoId));
+    consultas.push(Categorias.findAll());
+
+    const [grupo1, categorias] = await Promise.all(consultas);
+    const grupo = {
+        id: grupo1.id,
+        nombre: he.decode(grupo1.nombre),
+        descripcion: grupo1.descripcion,
+        url: he.decode(grupo1.url),
+        imagen: grupo1.imagen,
+        categoriaId: grupo1.categoriaId,
+        usuarioId: grupo1.usuarioId
+    }
+    res.render('editar-grupo', {
+        nombrePagina: `Editar grupo : ${grupo.nombre}`,
+        grupo,
+        categorias
+    });
 }
