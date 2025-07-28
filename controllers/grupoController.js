@@ -3,7 +3,8 @@ const Grupos = require('../models/Grupos');
 const { check } = require('express-validator');
 const multer = require('multer');//p subir imagenes
 const shortid = require('shortid');//para id
-const he = require('he');
+const he = require('he');//revierte desinfeccion
+const fs = require('fs');
 
 const configuracionMulter = {
     limits: { fileSize: 100000 },
@@ -128,4 +129,40 @@ exports.formEditarImagen = async (req, res) => {
     });
 
 }
+//modifica la imagen en la bd y elimina la anterior
+exports.editarImagen = async (req, res, next) => {
+    const grupo = await Grupos.findOne({ where: { id: req.params.grupoId, usuarioId: req.user.id } });
+    // el grupo existe y es valido
+    if (!grupo) {
+        req.flash('error', 'Operación no válida');
+        req.redirect('/iniciar-sesion');
+        return next();
+    }
+    //verificar que el archivo es valido
+    /* if (req.file) {
+        console.log(req.file.filename);
 
+    }//revisar que exista un archivo anterior 
+    if (grupo.imagen) {
+        console.log(grupo.imagen)
+    } */
+    //si hay imagen anterior y nueva, significa que vamos a borrar la anterior
+    if (req.file && grupo.imagen) {
+        const imagenAnteriorPath = __dirname + `/../public/uploads/grupos/${grupo.imagen}`;
+        //eliminar archivo con filesystem
+        fs.unlink(imagenAnteriorPath, (error) => {
+            if (error) {
+                console.log(error);
+            }
+            return;
+        });
+        //si hay img nueva la guardamos
+        if (req.file) {
+            grupo.imagen = req.file.filename;
+        }
+        //guardar en la db
+        await grupo.save();
+        req.flash('exito', 'Cambios almacenados correctamente');
+        res.redirect('/administracion');
+    }
+}
