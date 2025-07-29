@@ -5,6 +5,7 @@ const multer = require('multer');//p subir imagenes
 const shortid = require('shortid');//para id
 const he = require('he');//revierte desinfeccion
 const fs = require('fs');
+const { where } = require('sequelize');
 
 const configuracionMulter = {
     limits: { fileSize: 100000 },
@@ -165,4 +166,47 @@ exports.editarImagen = async (req, res, next) => {
         req.flash('exito', 'Cambios almacenados correctamente');
         res.redirect('/administracion');
     }
+}
+//muestra el formulario para eliminar un grupo
+exports.formEliminarGrupo = async (req, res, next) => {
+    const grupo = await Grupos.findOne({ where: { id: req.params.grupoId, usuarioId: req.user.id } });
+
+    if (!grupo) {
+        req.flash('error', 'Operación no válida');
+        res.redirect('/administracion');
+        return next();
+    }
+    //todo bien, ejecutar la vista
+    res.render('eliminar-grupo', {
+        nombrePagina: `Eliminar grupo: ${grupo.nombre}`
+    })
+}
+exports.eliminarGrupo = async (req, res, next) => {
+    const grupo = await Grupos.findOne({ where: { id: req.params.grupoId, usuarioId: req.user.id } });
+
+    if (!grupo) {
+        req.flash('error', 'Operación no válida');
+        res.redirect('/administracion');
+        return next();
+    }
+    //si hay imagen hay que eliminarla
+    if (grupo.imagen) {
+        const imagenAnteriorPath = __dirname + `/../public/uploads/grupos/${grupo.imagen}`;
+        //eliminar archivo con filesystem
+        fs.unlink(imagenAnteriorPath, (error) => {
+            if (error) {
+                console.log(error);
+            }
+            return;
+        });
+    }
+    //eliminar el grupo
+    await Grupos.destroy({
+        where: {
+            id: req.params.grupoId
+        }
+    });
+    //redireccionar al usuario
+    req.flash('exito', 'Grupo eliminado');
+    res.redirect('/administracion');
 }
