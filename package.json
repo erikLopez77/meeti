@@ -31,6 +31,7 @@
     "express-session": "^1.18.1",
     "express-validator": "^7.2.1",
     "he": "^1.2.0",
+    "leaflet-geosearch": "^4.2.0",
     "multer": "^2.0.1",
     "nodemailer": "^6.9.16",
     "passport": "^0.7.0",
